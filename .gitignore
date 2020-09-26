@@ -1,0 +1,11 @@
+*.py[co]
+.*.swp
+.DS_Store
+.nfs*
+*~
+*.sublime-*
+.chisubmit
+__pycache__
+*.gz
+.cache
+tests.json
