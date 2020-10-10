@@ -8,7 +8,7 @@ These are the files for Programming Assignment #1.
 - test_sir.py: The automated tests. See the programming assignment
   writeup for instructions on how to run them.
 
-- pytest.ini: A configuration file that you can safely ignore.
+- pytest.ini and .pylintrc: Configuration files that you can safely ignore.
 
 - tests/: A directory containing files specifying the tests.
 

@@ -50,7 +50,6 @@ def has_an_infected_neighbor(city, position):
     # YOUR CODE HERE
 
     # REPLACE None WITH THE APPROPRIATE BOOLEAN VALUE
-
     return None
 
 
@@ -178,16 +177,11 @@ def calc_avg_days_to_zero_infections(
 @click.option("--num-trials", default=1, type=int)
 @click.option("--task-type", default="single",
               type=click.Choice(['single', 'average']))
-@click.option("--debug", is_flag=True)
-
 def cmd(city, days_contagious, random_seed, vaccine_effectiveness,
-        num_trials, task_type, debug):
+        num_trials, task_type):
     '''
     Process the command-line arguments and do the work.
     '''
-
-    global DEBUG
-    DEBUG = debug
 
     # Convert the city string into a city list.
     city = [p.strip() for p in city.split(",")]
@@ -224,4 +218,3 @@ def cmd(city, days_contagious, random_seed, vaccine_effectiveness,
 
 if __name__ == "__main__":
     cmd()  # pylint: disable=no-value-for-parameter
-
