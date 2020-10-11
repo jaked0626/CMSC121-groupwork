@@ -64,9 +64,6 @@ def gen_check_rand_calls(seed, max_num_calls):
         actual_r = random.random()
         expected_r = rand_vals[expected_num_calls]
 
-        print(rand_vals)
-        print(actual_r)
-
         # Did the call to random yield the expected value?
         if actual_r == pytest.approx(expected_r):
             return True, None
@@ -82,7 +79,7 @@ def gen_check_rand_calls(seed, max_num_calls):
     return check
 
 
-CHECK_RAND_20170217 = gen_check_rand_calls(20170217, 6)
+CHECK_RAND_20170217 = gen_check_rand_calls(20170217, 7)
 
 
 def read_config_file(filename):
@@ -388,7 +385,7 @@ def test_vaccinate_city(params):
         # Use pre-generated random checking function
         check_rand = CHECK_RAND_20170217
     else:
-        check_rand = gen_check_rand_calls(params["seed"], 6)
+        check_rand = gen_check_rand_calls(params["seed"], 7)
 
     random.seed(params["seed"])
 
