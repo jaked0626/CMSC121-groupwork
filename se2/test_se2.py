@@ -271,7 +271,7 @@ def do_test_compute_matching(lst1, lst2, expected):
     check_equals(actual, expected, recreate_msg)
 
 def do_test_compute_matching_indices(lst1, lst2, expected):
-    recreate_msg = gen_recreate_msg(MODULE, "compute_matching", *(lst1, lst2))
+    recreate_msg = gen_recreate_msg(MODULE, "compute_matching_indices", *(lst1, lst2))
 
     actual = se2.compute_matching_indices(lst1, lst2)
 

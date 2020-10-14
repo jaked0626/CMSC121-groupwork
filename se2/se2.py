@@ -49,7 +49,7 @@ def compute_matching_indices(lst1, lst2):
 
     lst1, lst2: lists
 
-    Returns: list of bools
+    Returns: list of integer indices
     """
     ### Leave this assertion
     assert len(lst1) == len(lst2)
