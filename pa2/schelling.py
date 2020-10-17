@@ -6,9 +6,9 @@ CS121: Schelling Model of Housing Segregation
 
     filename -- name of a file containing a sample city grid
 
-    R - The radius of the neighborhood: home at Location (i, j) is in
-        the neighborhood of the home at Location (k,l)
-        if k-R <= i <= k+R and l-R <= j <= l+R
+    R - The radius of the neighborhood: a home at Location (k, l) is in
+        the neighborhood of the home at Location (i,j) if 0 <= k < N,
+        0 <= l < N, and 0 <= |i-k| + |j-l| <= R.
 
     similarity_satisfaction_range (lower bound and upper bound) -
          acceptable range for ratio of the number of
