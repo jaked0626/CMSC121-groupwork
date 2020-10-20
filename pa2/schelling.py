@@ -57,6 +57,7 @@ def is_satisfied(grid, R, location, sim_sat_range):
     i, j = location
     S = 0
     H = 0
+    assert grid[i][j] != "F"
     for k, _ in enumerate(grid): 
         for l, _ in enumerate(grid): 
             val = abs(i - k) + abs(j - l)
@@ -66,7 +67,7 @@ def is_satisfied(grid, R, location, sim_sat_range):
                     if grid[k][l] == grid[i][j]:
                         S += 1
                         H += 1
-                    elif grid[k][l] == "F":
+                    elif grid[k][l] == grid[i][j]:
                         H += 0
                     else: 
                         H += 1
@@ -74,13 +75,28 @@ def is_satisfied(grid, R, location, sim_sat_range):
     if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
         satisfied = True
 
-
-
-    # Replace False with the appropriate return value
+    
     return satisfied
 
+    
+    #def swap(grid, location, R, sim_sat_range, patience, max_steps, find_homes_for_sale):
+        #temporary_status = is_satisfied(grid,R, location, sim_sat_range)
+        #temporary_location = location
+        #if temporary_status == False:
+         #   for i in enumerate(grid):
+                #temporary_location = find_homes_for_sale[0]
+        #else:
+            #temporary_location
 
-def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
+
+
+
+    
+
+
+
+
+#def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
     '''
     Do a full simulation.
 
