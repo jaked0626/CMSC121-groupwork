@@ -50,17 +50,34 @@ def is_satisfied(grid, R, location, sim_sat_range):
     # Since it does not make sense to call this function on a home
     # that is for sale, we recommend adding an assertion to verify
     # that the home is not for sale
-    assert  grid[i][j] !="F"
+    # assert  grid[i][j] !="F"
+    #assert not "F"
+    satisfied = False
     in_neighborhood = False
     i, j = location
-    for k in range(len(grid)):
-        for l in range(len(grid)):
+    S = 0
+    H = 0
+    for k, _ in enumerate(grid): 
+        for l, _ in enumerate(grid): 
             val = abs(i - k) + abs(j - l)
             if val <= R:
                 in_neighborhood = True
+                if in_neighborhood == True:
+                    if grid[k][l] == grid[i][j]:
+                        S += 1
+                        H += 1
+                    elif grid[k][l] == "F":
+                        H += 0
+                    else: 
+                        H += 1
+    sim_score = S / H
+    if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
+        satisfied = True
+
+
 
     # Replace False with the appropriate return value
-    return False
+    return satisfied
 
 
 def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
