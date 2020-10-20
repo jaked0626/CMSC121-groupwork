@@ -79,13 +79,16 @@ def is_satisfied(grid, R, location, sim_sat_range):
     return satisfied
 
     
-    #def swap(grid, location, R, sim_sat_range, patience, max_steps, find_homes_for_sale):
-        #temporary_status = is_satisfied(grid,R, location, sim_sat_range)
-        #temporary_location = location
-        #if temporary_status == False:
-         #   for i in enumerate(grid):
-                #temporary_location = find_homes_for_sale[0]
-        #else:
+def swap(grid, location, R, sim_sat_range, sim_sat_range, homes_for_sale):
+    temp_status = is_satisfactory(grid, R, location, sim_sat_range):
+        
+                    
+
+
+                    
+                        
+
+        else:
             #temporary_location
 
 
