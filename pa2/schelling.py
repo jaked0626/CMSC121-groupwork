@@ -67,7 +67,7 @@ def is_satisfied(grid, R, location, sim_sat_range):
                     if grid[k][l] == grid[i][j]:
                         S += 1
                         H += 1
-                    elif grid[k][l] == grid[i][j]:
+                    elif grid[k][l] == "F":
                         H += 0
                     else: 
                         H += 1
