@@ -49,7 +49,15 @@ def is_satisfied(grid, R, location, sim_sat_range):
 
     # Since it does not make sense to call this function on a home
     # that is for sale, we recommend adding an assertion to verify
-    # that the home is not for sale.
+    # that the home is not for sale
+    assert  grid[i][j] !="F"
+    in_neighborhood = False
+    i, j = location
+    for k in range(len(grid)):
+        for l in range(len(grid)):
+            val = abs(i - k) + abs(j - l)
+            if val <= R:
+                in_neighborhood = True
 
     # Replace False with the appropriate return value
     return False
