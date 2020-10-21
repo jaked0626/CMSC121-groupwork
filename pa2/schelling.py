@@ -61,8 +61,6 @@ def is_satisfied(grid, R, location, sim_sat_range):
         for l, _ in enumerate(grid): 
             val = abs(i - k) + abs(j - l)
             if val <= R:
-                in_neighborhood = True
-                if in_neighborhood == True:
                     if grid[k][l] == grid[i][j]:
                         S += 1
                         H += 1
@@ -94,16 +92,15 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     '''
     moved = False
     visits = 0
-    temporary_status = is_satisfied(grid, R, location, sim_sat_range)
     new_location = location
-    if temporary_status == False:
+    if is_satisfied(grid, R, location, sim_sat_range) == False:
         for h, _ in enumerate(homes_for_sale):
             new_location = homes_for_sale[h]
             swap(grid, location, new_location)
             if is_satisfied(grid, R, new_location, sim_sat_range) == True:
                 visits += 1
                 if visits == patience:
-                    homes_for_sale.pop(h)
+                    del homes_for_sale[h]
                     homes_for_sale.insert(0, location)
                     moved = True
                     break                                       
