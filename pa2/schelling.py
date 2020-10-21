@@ -73,30 +73,8 @@ def is_satisfied(grid, R, location, sim_sat_range):
     sim_score = S / H
     if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
         satisfied = True
-
-    
     return satisfied
 
-    
-def swap_n_swap_back(grid, R, location, sim_sat_range, homes_for_sale):
-    temporary_status = is_satisfied(grid, R, location, sim_sat_range)
-    temporary_location = location
-    if temporary_status == False:
-        for h, _ in enumerate(homes_for_sale):
-            temporary_location = homes_for_sale[h]
-            i, j = temporary_location 
-            k, l = location
-            grid[i][j] = grid[k][l]
-            grid[k][l] = "F"
-            if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
-                print(temporary_location, "satisfied")
-            else: 
-                print(temporary_location, "not satisfied")
-            grid[k][l] = grid[i][j]
-            grid[i][j] = "F"
-    else:
-
-        return "not applicable"
 def swap(grid, old_location, new_location):
     '''
     replaces
@@ -114,6 +92,7 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     until the homeowner finds the ith listing that falls within her 
     satisfaction range, where i is equal to patience. 
     '''
+    moved = False
     visits = 0
     temporary_status = is_satisfied(grid, R, location, sim_sat_range)
     new_location = location
@@ -126,34 +105,35 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
                 if visits == patience:
                     homes_for_sale.pop(h)
                     homes_for_sale.insert(0, location)
+                    moved = True
                     break                                       
                 else:
                     swap(grid, new_location, location)
             else: 
                 swap(grid, new_location, location)
-    # return homes_for_sale, grid
+    return moved #,grid
  
 
 def simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, color):
     '''
     Docstring
     '''
+    count_moves = 0
     for k, _ in enumerate(grid): 
         for l, _ in enumerate(grid):
             if grid[k][l] == color:
                 location = (k, l)
-                relocation(grid, R, location, sim_sat_range, 
-                           homes_for_sale, patience) # modifies grid directly, ergo repeats should be calling updated grids
-    return homes_for_sale, grid
+                if relocation(grid, R, location, sim_sat_range, homes_for_sale, patience) == True:
+                    count_moves += 1
+    return count_moves
 
         #else:
             #temporary_location
 
 def simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience):
-    simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
-    print(homes_for_sale, grid)
-    simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
-    return homes_for_sale, grid
+    moves_in_M = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
+    moves_in_B = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
+    return moves_in_M + moves_in_B
 
 
 
@@ -174,10 +154,14 @@ def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
         for_sale (list of tuples): a list of locations with homes for sale
 
     Returns: (int) The number of relocations completed.
-    '''
-    for i in max_steps:
-        simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
-        if 
+    ''' 
+    count_relocation = 0
+    for i in range(max_steps):
+        count_relocation += simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
+        if simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience) == 0:
+            break
+    return count_relocation
+
 
 
 
