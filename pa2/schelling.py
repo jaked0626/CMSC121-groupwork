@@ -79,8 +79,9 @@ def is_satisfied(grid, R, location, sim_sat_range):
     return satisfied
 
     
-def swap(grid, location, R, sim_sat_range, sim_sat_range, homes_for_sale):
+def swap_and_swap_back(grid, R, sim_sat_range, sim_sat_range, homes_for_sale):
     temp_status = is_satisfactory(grid, R, location, sim_sat_range):
+
         
                     
 
