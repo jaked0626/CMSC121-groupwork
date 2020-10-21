@@ -79,8 +79,50 @@ def is_satisfied(grid, R, location, sim_sat_range):
     return satisfied
 
     
-def swap_and_swap_back(grid, R, sim_sat_range, sim_sat_range, homes_for_sale):
-    temp_status = is_satisfactory(grid, R, location, sim_sat_range):
+def swap_n_swap_back(grid, R, location, sim_sat_range, homes_for_sale):
+    temporary_status = is_satisfied(grid, R, location, sim_sat_range)
+    temporary_location = location
+    if temporary_status == False:
+        for h, _ in enumerate(homes_for_sale):
+            temporary_location = homes_for_sale[h]
+            i, j = temporary_location 
+            k, l = location
+            grid[i][j] = grid[k][l]
+            grid[k][l] = "F"
+            if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
+                print(temporary_location, "satisfied")
+            else: 
+                print(temporary_location, "not satisfied")
+            grid[k][l] = grid[i][j]
+            grid[i][j] = "F"
+    else:
+        return "not applicable"
+
+
+def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
+    temporary_status = is_satisfied(grid, R, location, sim_sat_range)
+    temporary_location = location
+    if temporary_status == False:
+        for h, _ in enumerate(homes_for_sale):
+            temporary_location = homes_for_sale[h]
+            i, j = temporary_location 
+            k, l = location
+            grid[i][j] = grid[k][l]
+            grid[k][l] = "F"
+            if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
+                visits += 1
+                if visits == patience:
+                    break
+                    return grid
+                else:
+                    grid[k][l] = grid[i][j]
+                    grid[i][j] = "F"
+            else: 
+                visits += 0
+                grid[k][l] = grid[i][j]
+                grid[i][j] = "F"
+    
+
 
         
                     
