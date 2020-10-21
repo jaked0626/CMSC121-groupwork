@@ -117,29 +117,23 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     '''
     visits = 0
     temporary_status = is_satisfied(grid, R, location, sim_sat_range)
-    temporary_location = location
+    new_location = location
     if temporary_status == False:
         for h, _ in enumerate(homes_for_sale):
-            temporary_location = homes_for_sale[h]
-            i, j = temporary_location 
-            k, l = location
-            grid[i][j] = grid[k][l]
-            grid[k][l] = "F"
-            if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
+            new_location = homes_for_sale[h]
+            swap(grid, location, new_location)
+            if is_satisfied(grid, R, new_location, sim_sat_range) == True:
                 visits += 1
                 if visits == patience:
                     homes_for_sale.pop(h)
                     homes_for_sale.insert(0, location)
                     break                                       
                 else:
-                    grid[k][l] = grid[i][j]
-                    grid[i][j] = "F"
+                    swap(grid, new_location, location)
             else: 
-                visits += 0
-                grid[k][l] = grid[i][j]
-                grid[i][j] = "F"
+                swap(grid, new_location, location)
     return homes_for_sale, grid
-    
+ 
 
         
                     
