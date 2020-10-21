@@ -52,15 +52,15 @@ def is_satisfied(grid, R, location, sim_sat_range):
     # that the home is not for sale
     
     satisfied = False
-    in_neighborhood = False
     i, j = location
     S = 0
     H = 0
     assert grid[i][j] != "F"
-    for k, _ in enumerate(grid): 
-        for l, _ in enumerate(grid): 
-            val = abs(i - k) + abs(j - l)
-            if val <= R:
+    for k in range(i - R, i + R + 1): 
+        for l in range(j - R, j + R + 1): 
+            if 0 <= k < len(grid) and 0 <= l < len(grid):
+                val = abs(i - k) + abs(j - l)
+                if val <= R:
                     if grid[k][l] == grid[i][j]:
                         S += 1
                         H += 1
