@@ -157,16 +157,11 @@ def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
     ''' 
     count_relocation = 0
     for i in range(max_steps):
-        count_relocation += simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
-        if simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience) == 0:
+        x = simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
+        count_relocation += x
+        if x == 0:
             break
     return count_relocation
-
-
-
-
-    # Replace 0 with an appropriate return value
-    return 0
 
 
 @click.command(name="schelling")
