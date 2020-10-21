@@ -100,39 +100,46 @@ def swap_n_swap_back(grid, R, location, sim_sat_range, homes_for_sale):
 def swap(grid, old_location, new_location):
     '''
     replaces
-        i, j = new_location
-        k,l = old_location
-        grid[i][j] = grid[k][l]
-        grid[k][l] = "F" 
-        print(grid)
+    '''
+    i, j = new_location
+    k,l = old_location
+    grid[i][j] = grid[k][l]
+    grid[k][l] = "F" 
+    print(grid)
 
 
 
-#def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
-    #temporary_status = is_satisfied(grid, R, location, sim_sat_range)
-    #temporary_location = location
-    #visits = 0
-    #if temporary_status == False:
-        #for h, _ in enumerate(homes_for_sale):
-            #temporary_location = homes_for_sale[h]
-            #i, j = temporary_location 
-            #k, l = location
-            #grid[i][j] = grid[k][l]
-            #grid[k][l] = "F"
-            #if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
-                #visits += 1
-                #if visits == patience:
-                    #break
-                    #return grid
-                #else:
-                    #grid[k][l] = grid[i][j]
-                    #grid[i][j] = "F"
-            #else: 
-                #visits += 0
-                #grid[k][l] = grid[i][j]
-                #grid[i][j] = "F"
+def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
+    '''
+    Puts a homeowner at a given location through the list of homes_for_sale
+    until the homeowner finds the ith listing that falls within her 
+    satisfaction range, where i is equal to patience. 
+    '''
+    visits = 0
+    temporary_status = is_satisfied(grid, R, location, sim_sat_range)
+    temporary_location = location
+    if temporary_status == False:
+        for h, _ in enumerate(homes_for_sale):
+            temporary_location = homes_for_sale[h]
+            i, j = temporary_location 
+            k, l = location
+            grid[i][j] = grid[k][l]
+            grid[k][l] = "F"
+            if is_satisfied(grid, R, temporary_location, sim_sat_range) == True:
+                visits += 1
+                if visits == patience:
+                    homes_for_sale.pop(h)
+                    homes_for_sale.insert(0, location)
+                    break                                       
+                else:
+                    grid[k][l] = grid[i][j]
+                    grid[i][j] = "F"
+            else: 
+                visits += 0
+                grid[k][l] = grid[i][j]
+                grid[i][j] = "F"
+    return homes_for_sale, grid
     
-
 
         
                     
@@ -144,10 +151,6 @@ def swap(grid, old_location, new_location):
         #else:
             #temporary_location
 
-
-
-
-    
 
 
 
