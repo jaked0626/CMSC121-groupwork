@@ -1,3 +1,8 @@
+# This file includes programming assignment 2, Schelling Model of Housing Segregation
+#
+# Jake Underland, Defne Buyukyazgan
+#
+
 """
 CS121: Schelling Model of Housing Segregation
 
@@ -57,23 +62,23 @@ def is_satisfied(grid, R, location, sim_sat_range):
     S = 0
     H = 0
     assert grid[i][j] != "F"
-    for k in range(i - R, i + R + 1):  # Specify rows within R-radius
-        for l in range(j - R, j + R + 1):  # Specify columns within R-radius
-            if 0 <= k < len(grid) and 0 <= l < len(grid):  # Limits to coordinates within grid
+    for k in range(i - R, i + R + 1):  # Rows within radius R 
+        for l in range(j - R, j + R + 1):  # Columns within radius R 
+            if 0 <= k < len(grid) and 0 <= l < len(grid):  
+                # For coordinates within radius 
+                # R and within range of the grid,
+                # see if they meet criteria for neighbor.
                 val = abs(i - k) + abs(j - l)
                 if val <= R:
                     if grid[k][l] == grid[i][j]: 
-                        # If neighbors are of the same color, 
-                        # S and H increase by 1.
+                        # Same colored homes
                         S += 1
                         H += 1
                     elif grid[k][l] == "F":  
-                        # Excluding vacant houses from 
-                        # satisfaction score computation.
+                        # Vacant homes
                         H += 0
                     else: 
-                        # Counting different colored houses as 
-                        # occupied houses in neighborhood.
+                        # Different colored homes
                         H += 1
     sim_score = S / H
     if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
@@ -91,6 +96,8 @@ def swap(grid, old_location, new_location):
         old_location (int, int): a grid location
         new_location (int, int): a grid location
     '''
+    # House in new location assumes color of house from old location.
+    # House in old location becomes vacant.
     i, j = new_location
     k, l = old_location
     grid[i][j] = grid[k][l]
@@ -116,28 +123,34 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
           with her similarity score.
         homes_for_sale (list of tuples): list of coordinates for vacant 
           houses ("F").
-        patiene (int): number of satisfactory houses homeowner must visit 
-          moving.
+        patience (int): number of satisfactory houses homeowner must visit 
+          before moving.
     Returns: 
         moved (bool): True if homeowner moves homes, False otherwise.
     '''
     moved = False
     visits = 0
-    new_location = location
     if is_satisfied(grid, R, location, sim_sat_range) == False:
-        for h, _ in enumerate(homes_for_sale):
-            new_location = homes_for_sale[h]
+        for h, new_location in enumerate(homes_for_sale):
             swap(grid, location, new_location)
             if is_satisfied(grid, R, new_location, sim_sat_range) == True:
+                # Number of satisfactory houses 
+                # visited increases
                 visits += 1
                 if visits == patience:
+                    # When number of visits equals level of 
+                    # patience, homeowner moves permanently. 
                     del homes_for_sale[h]
                     homes_for_sale.insert(0, location)
                     moved = True
                     break                                       
                 else:
+                    # If patience does not run out, 
+                    # homeowner does not move.
                     swap(grid, new_location, location)
             else: 
+                # If vacant house isn't satisfactory,
+                # homeowner does not move.
                 swap(grid, new_location, location)
     return moved 
  
@@ -150,18 +163,26 @@ def simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, color):
     for k, _ in enumerate(grid): 
         for l, _ in enumerate(grid):
             if grid[k][l] == color:
+                # Make sure the wave is fixating on
+                # homeowners of a certain color.
                 location = (k, l)
                 if relocation(grid, R, location, sim_sat_range, homes_for_sale, patience) == True:
+                    # Recall that relocation yields a boolean that
+                    # tracks whether the homeowner moved or not.
                     count_moves += 1
     return count_moves
 
-        #else:
-            #temporary_location
+
 
 def simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience):
-    moves_in_M = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
-    moves_in_B = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
-    return moves_in_M + moves_in_B
+    '''
+    docstring
+    '''
+    # Recall that simulate_a_wave yields number of moves in a wave
+    M_moves = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
+    B_moves = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
+    step_moves = M_moves + B_moves
+    return step_moves
 
 
 
@@ -181,13 +202,15 @@ def do_simulation(grid, R, sim_sat_range, patience, max_steps, homes_for_sale):
         max_steps (int): maximum number of steps to do
         for_sale (list of tuples): a list of locations with homes for sale
 
-    Returns: (int) The number of relocations completed.
+    Returns: 
+        count_relocation (int): The number of relocations completed.
     ''' 
     count_relocation = 0
     for i in range(max_steps):
-        x = simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
-        count_relocation += x
-        if x == 0:
+        relocations_per_step = simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience)
+        count_relocation += relocations_per_step
+        if relocations_per_step == 0:
+            # Terminate function when no one relocates in a step.
             break
     return count_relocation
 
