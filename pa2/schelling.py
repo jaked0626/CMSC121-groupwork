@@ -44,7 +44,8 @@ def is_satisfied(grid, R, location, sim_sat_range):
         sim_sat_range (float, float): lower bound and upper bound on
           the range (inclusive) for when the homeowner is satisfied
           with his similarity score.
-    Returns: bool
+    Returns: 
+        satisfied (bool): True if homeowner is satisfied, False otherwise.
     '''
 
     # Since it does not make sense to call this function on a home
@@ -56,17 +57,23 @@ def is_satisfied(grid, R, location, sim_sat_range):
     S = 0
     H = 0
     assert grid[i][j] != "F"
-    for k in range(i - R, i + R + 1): 
-        for l in range(j - R, j + R + 1): 
-            if 0 <= k < len(grid) and 0 <= l < len(grid):
+    for k in range(i - R, i + R + 1):  # Specify rows within R-radius
+        for l in range(j - R, j + R + 1):  # Specify columns within R-radius
+            if 0 <= k < len(grid) and 0 <= l < len(grid):  # Limits to coordinates within grid
                 val = abs(i - k) + abs(j - l)
                 if val <= R:
-                    if grid[k][l] == grid[i][j]:
+                    if grid[k][l] == grid[i][j]: 
+                        # If neighbors are of the same color, 
+                        # S and H increase by 1.
                         S += 1
                         H += 1
-                    elif grid[k][l] == "F":
+                    elif grid[k][l] == "F":  
+                        # Excluding vacant houses from 
+                        # satisfaction score computation.
                         H += 0
                     else: 
+                        # Counting different colored houses as 
+                        # occupied houses in neighborhood.
                         H += 1
     sim_score = S / H
     if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
@@ -75,10 +82,17 @@ def is_satisfied(grid, R, location, sim_sat_range):
 
 def swap(grid, old_location, new_location):
     '''
-    replaces
+    Given two locations in a grid, where the former is a colored house
+    and the latter is unoccupied ("F"), it swaps the two and alters the
+    grid. 
+
+    Inputs: 
+        grid: the grid
+        old_location (int, int): a grid location
+        new_location (int, int): a grid location
     '''
     i, j = new_location
-    k,l = old_location
+    k, l = old_location
     grid[i][j] = grid[k][l]
     grid[k][l] = "F"
 
@@ -86,9 +100,26 @@ def swap(grid, old_location, new_location):
 
 def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     '''
-    Puts a homeowner at a given location through the list of homes_for_sale
-    until the homeowner finds the ith listing that falls within her 
-    satisfaction range, where i is equal to patience. 
+    Puts an unsatisfied homeowner at a given location through the list 
+    of homes_for_sale until the homeowner finds the ith listing that 
+    falls within her satisfaction range, where i is equal to patience. 
+    If she does, homeowner moves to that location, and her old home is 
+    added to the front of the list of homes_for_sale.
+    If she does not find a satisfactory home, she remains in her old home.
+
+    Inputs:
+        grid: the grid
+        R (int): neighborhood parameter
+        location (int, int): a grid location
+        sim_sat_range (float, float): lower bound and upper bound on
+          the range (inclusive) for when the homeowner is satisfied
+          with her similarity score.
+        homes_for_sale (list of tuples): list of coordinates for vacant 
+          houses ("F").
+        patiene (int): number of satisfactory houses homeowner must visit 
+          moving.
+    Returns: 
+        moved (bool): True if homeowner moves homes, False otherwise.
     '''
     moved = False
     visits = 0
@@ -108,7 +139,7 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
                     swap(grid, new_location, location)
             else: 
                 swap(grid, new_location, location)
-    return moved #,grid
+    return moved 
  
 
 def simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, color):
