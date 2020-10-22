@@ -113,6 +113,7 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     If she does, homeowner moves to that location, and her old home is 
     added to the front of the list of homes_for_sale.
     If she does not find a satisfactory home, she remains in her old home.
+    This function modifies original grid.
 
     Inputs:
         grid: the grid
@@ -126,23 +127,22 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
         patience (int): number of satisfactory houses homeowner must visit 
           before moving.
     Returns: 
-        moved (bool): True if homeowner moves homes, False otherwise.
+        relocated (bool): True if homeowner moves homes, False otherwise.
     '''
-    moved = False
+    relocated = False
     visits = 0
     if is_satisfied(grid, R, location, sim_sat_range) == False:
         for h, new_location in enumerate(homes_for_sale):
             swap(grid, location, new_location)
             if is_satisfied(grid, R, new_location, sim_sat_range) == True:
-                # Number of satisfactory houses 
-                # visited increases
+                # Number of satisfactory houses visited increases
                 visits += 1
                 if visits == patience:
                     # When number of visits equals level of 
                     # patience, homeowner moves permanently. 
                     del homes_for_sale[h]
                     homes_for_sale.insert(0, location)
-                    moved = True
+                    relocated = True
                     break                                       
                 else:
                     # If patience does not run out, 
@@ -152,36 +152,64 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
                 # If vacant house isn't satisfactory,
                 # homeowner does not move.
                 swap(grid, new_location, location)
-    return moved 
+    return relocated 
  
 
 def simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, color):
     '''
-    Docstring
+    Simulates a wave for homeowners of specified color. Wave goes through
+    grid and runs relocation function on all homeowners of that color.
+
+    Inputs:
+        grid: the grid
+        R (int): neighborhood parameter
+        sim_sat_range (float, float): lower bound and upper bound on
+          the range (inclusive) for when the homeowner is satisfied
+          with her similarity score.
+        homes_for_sale (list of tuples): list of coordinates for vacant 
+          houses ("F").
+        patience (int): number of satisfactory houses homeowner must visit 
+          before moving.
+        color (string): "M" for a Maroon wave and "B" for a Blue wave.
+    Returns: 
+        wave_moves (int): Number of relocations that occur in the wave.
     '''
-    count_moves = 0
+    wave_moves = 0
     for k, _ in enumerate(grid): 
         for l, _ in enumerate(grid):
             if grid[k][l] == color:
-                # Make sure the wave is fixating on
+                # Make sure the wave is focusing on
                 # homeowners of a certain color.
                 location = (k, l)
                 if relocation(grid, R, location, sim_sat_range, homes_for_sale, patience) == True:
                     # Recall that relocation yields a boolean that
                     # tracks whether the homeowner moved or not.
-                    count_moves += 1
-    return count_moves
+                    wave_moves += 1
+    return wave_moves
 
 
 
 def simulate_a_step(grid, R, sim_sat_range, homes_for_sale, patience):
     '''
-    docstring
+    Simulates a step. Runs Maroon wave and Blue wave consecutively.
+
+    Inputs:
+        grid: the grid
+        R (int): neighborhood parameter
+        sim_sat_range (float, float): lower bound and upper bound on
+          the range (inclusive) for when the homeowner is satisfied
+          with her similarity score.
+        homes_for_sale (list of tuples): list of coordinates for vacant 
+          houses ("F").
+        patience (int): number of satisfactory houses homeowner must visit 
+          before moving.
+    Returns: 
+        step_moves (int): Number of relocations that occur in the step.
     '''
     # Recall that simulate_a_wave yields number of moves in a wave
-    M_moves = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
-    B_moves = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
-    step_moves = M_moves + B_moves
+    wave_moves_M = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "M")
+    wave_moves_B = simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, "B")
+    step_moves = wave_moves_M + wave_moves_B
     return step_moves
 
 
