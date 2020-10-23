@@ -134,7 +134,7 @@ def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
     if is_satisfied(grid, R, location, sim_sat_range) == False:
         for h, new_location in enumerate(homes_for_sale):
             swap(grid, location, new_location)
-            if is_satisfied(grid, R, new_location, sim_sat_range) == True:
+            if is_satisfied(grid, R, new_location, sim_sat_range):
                 # Number of satisfactory houses visited increases
                 visits += 1
                 if visits == patience:
@@ -181,7 +181,7 @@ def simulate_a_wave(grid, R, sim_sat_range, homes_for_sale, patience, color):
                 # Make sure the wave is focusing on
                 # homeowners of a certain color.
                 location = (k, l)
-                if relocation(grid, R, location, sim_sat_range, homes_for_sale, patience) == True:
+                if relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
                     # Recall that relocation yields a boolean that
                     # tracks whether the homeowner moved or not.
                     wave_moves += 1
