@@ -62,6 +62,7 @@ def is_satisfied(grid, R, location, sim_sat_range):
     S = 0
     H = 0
     assert grid[i][j] != "F"
+
     for k in range(i - R, i + R + 1):  # Rows within radius R 
         for l in range(j - R, j + R + 1):  # Columns within radius R 
             if 0 <= k < len(grid) and 0 <= l < len(grid):  
@@ -69,6 +70,7 @@ def is_satisfied(grid, R, location, sim_sat_range):
                 # R and within range of the grid,
                 # see if they meet criteria for neighbor.
                 val = abs(i - k) + abs(j - l)
+
                 if val <= R:
                     if grid[k][l] == grid[i][j]: 
                         # Same colored homes
@@ -80,10 +82,14 @@ def is_satisfied(grid, R, location, sim_sat_range):
                     else: 
                         # Different colored homes
                         H += 1
+
     sim_score = S / H
+
     if sim_sat_range[0] <= sim_score <= sim_sat_range[1]:
         satisfied = True
+
     return satisfied
+
 
 def swap(grid, old_location, new_location):
     '''
@@ -102,7 +108,6 @@ def swap(grid, old_location, new_location):
     k, l = old_location
     grid[i][j] = grid[k][l]
     grid[k][l] = "F"
-
 
 
 def relocation(grid, R, location, sim_sat_range, homes_for_sale, patience):
