@@ -2,7 +2,6 @@ import numpy as np
 import sys
 
 # import linear regression and apply beta from PA #5.
-sys.path.append("../pa5")
 from util import linear_regression, prepend_ones_column
 
 def read_file(filename):
@@ -46,7 +45,7 @@ def task2(b):
     print()
 
 def go():
-    city_col_names, city_data = read_file("../pa5/data/city/data.csv")
+    city_col_names, city_data = read_file("city_data.csv")
 
     graffiti = city_data[:,0]
     garbage = city_data[:,3]
