@@ -14,7 +14,19 @@ import util
 
 
 
-### YOUR Voter class GOES HERE.
+class Voter(object):
+def __init__(self, arrival_time, voting_duration, start_time):
+    '''
+    Constructor for the Voter class
+
+    Input:
+        name: (str) Name of the precinct
+        hours_open: (int) Hours the precinct will remain open
+        max_num_voters: (int) Number of voters in the precinct
+        num_booths: (int) Number of voting booths in the precinct
+        arrival_rate: (float) Rate at which voters arrive
+        voting_duration_rate: (float) Lambda for voting duration
+    '''
 
 
 class Precinct(object):
