@@ -15,19 +15,17 @@ import util
 
 
 class Voter(object):
-def __init__(self, arrival_time, voting_duration, start_time):
-    '''
-    Constructor for the Voter class
+    def __init__(self,arrival_rate, voting_duration):
+    self.arrival_time = 0
+    self.voting_duration = 
+    self.start_time = None
 
-    Input:
-        name: (str) Name of the precinct
-        hours_open: (int) Hours the precinct will remain open
-        max_num_voters: (int) Number of voters in the precinct
-        num_booths: (int) Number of voting booths in the precinct
-        arrival_rate: (float) Rate at which voters arrive
-        voting_duration_rate: (float) Lambda for voting duration
-    '''
 
+
+    def arrival_time(self, seed):
+
+
+    def __repr__
 
 class Precinct(object):
     def __init__(self, name, hours_open, max_num_voters,
@@ -43,17 +41,21 @@ class Precinct(object):
             arrival_rate: (float) Rate at which voters arrive
             voting_duration_rate: (float) Lambda for voting duration
         '''
+        self.name = name 
+        self.hours_open = hours_open
+        self.hours_open = hours_open
+        self.max_num_voters = max_num_voters
+        self.num_booths = num_booths
+        self.arrival_rate = arrival_rate
+        self.voting_duration_rate = voting_duration_rate
+           
 
-        # YOUR CODE HERE
-
-        # REPLACE "pass" with your constructor implementation
-        pass
-
+    def next_voter(self, name, hours_open):
+        
 
     def simulate(self, percent_straight_ticket, straight_ticket_duration, seed):
         '''
         Simulate a day of voting
-
         Input:
             percent_straight_ticket: (float) Percentage of straight-ticket
               voters as a decimal between 0 and 1 (inclusive)
@@ -65,7 +67,7 @@ class Precinct(object):
             List of voters who voted in the precinct
         '''
 
-        # YOUR CODE HERE
+        
 
         # REPLACE [] with appropriate return value
         return []
