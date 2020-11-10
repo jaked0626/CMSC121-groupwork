@@ -31,7 +31,7 @@ def gen_recreate_msg(module, function, *params, **kwparams):
         
     params_str = ", ".join([pretty_print_repr(p) for p in params])
     if len(kwparams) > 0:
-        params_str += ", ".join([f"{k} = {repr(v)}" for k, v in kwparams.items()])
+        params_str += ", ".join(["{} = {}".format(k, repr(v)) for k, v in kwparams.items()])
 
 
     recreate_msg = "To recreate this test in ipython3 run:\n"
@@ -74,8 +74,8 @@ def check_dtype(array, expected, recreate_msg=None):
 
 def check_array_equal(actual, expected, recreate_msg):
     msg = "The function returned the wrong array"
-    msg += f" Expected array: {expected}\n"
-    msg += f" Actual returned array: {actual}\n"
+    msg += " Expected array: {}\n".format(expected)
+    msg += " Actual returned array: {}\n".format(expected)
 
     if recreate_msg is not None:
         msg += "\n" + recreate_msg
@@ -259,8 +259,8 @@ def test_find_closest_value():
         expected_closest_val = manual_closest_value(x, cv)
 
         assert expected_closest_val == result, \
-            f"\n function returned {result} as closest val " \
-            + f"but we expected {expected_closest_val}\n\n" \
+            "\n function returned {} as closest val ".format(result) \
+            + "but we expected {}\n\n".format(expected_closest_val) \
             + recreate_msg
 
 
@@ -287,8 +287,8 @@ def test_select_row_col():
 
         expected_shape = (4, len(tgt_cols))
         assert result.shape == expected_shape, \
-            f"The shape of the returned array was {result.shape}, but" \
-            + f" we expected {expected_shape}\n\n" + recreate_msg
+            "The shape of the returned array was {}, but".format(result.shape) \
+            + " we expected {}\n\n".format(expected_shape) + recreate_msg
 
         expected_value = custom_get_cols(x, tgt_cols)
 
@@ -307,8 +307,8 @@ def test_select_row_col():
 
         expected_shape = (len(tgt_rows), 5)
         assert result.shape == expected_shape, \
-            f"The shape of the returned array was {result.shape}, but" \
-            + f" we expected {expected_shape}\n\n" + recreate_msg
+            "The shape of the returned array was {}, but".format(result.shape) \
+            + " we expected {}\n\n".format(expected_shape) + recreate_msg
 
         expected_value = custom_get_rows(x, tgt_rows)
 
