@@ -15,17 +15,16 @@ import util
 
 
 class Voter(object):
-    def __init__(self,arrival_rate, voting_duration):
-    self.arrival_time = 0
-    self.voting_duration = 
+    def __init__(self,arrival_time, voting_duration):
+    self.arrival_time = 
+    self.voting_duration = 0
     self.start_time = None
+    self.departure_time = None
 
 
 
-    def arrival_time(self, seed):
-
-
-    def __repr__
+    def __repr__(self):
+        return self.to_string()
 
 class Precinct(object):
     def __init__(self, name, hours_open, max_num_voters,
@@ -66,8 +65,12 @@ class Precinct(object):
         Output:
             List of voters who voted in the precinct
         '''
-
         
+        time = 0
+        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, percent_straight_ticket, straight_ticket_duration)
+        time += gaps
+        voter1 = Voter(time, vot_dur)
+
 
         # REPLACE [] with appropriate return value
         return []
