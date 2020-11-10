@@ -65,11 +65,32 @@ class Precinct(object):
         Output:
             List of voters who voted in the precinct
         '''
-        
+        #method to generate 1 voter, 
+        #want to add to a list of voters which we want to get length of to count num voter in precinct
         time = 0
-        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, percent_straight_ticket, straight_ticket_duration)
+        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
+                                            percent_straight_ticket, straight_ticket_duration)
         time += gaps
         voter1 = Voter(time, vot_dur)
+
+        #to do this in a loop need something like .
+        num_voters = 0
+        voter_lst = []
+        t = 0
+        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
+                                            percent_straight_ticket, straight_ticket_duration)
+        for v in voter_lst:
+        #    if time < hours_open and num_voters < max_num_voters:
+            time+= gaps
+            #increasing voter number, have to check when we can
+            voter = Voter(time, vot_dur)
+
+            voter_lst.append(voter)
+
+
+
+
+        
 
 
         # REPLACE [] with appropriate return value
