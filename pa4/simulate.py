@@ -15,13 +15,26 @@ import util
 
 
 class Voter(object):
+
     def __init__(self,arrival_time, voting_duration):
-    self.arrival_time = 
-    self.voting_duration = 0
-    self.start_time = None
-    self.departure_time = None
+        self.arrival_time = arrival_time
+        self.voting_duration = voting_duration
+        self.start_time = None
+        self.departure_time = None
 
 
+    def to_string(self):
+
+        dic = {"arrival_time":self.arrival_time,\
+                "start_time": self.start_time,\
+                "voting_duration": self.voting_duration,\
+                "departure_time": self.departure_time}
+
+        s = "arrival_time:{}, start_time:{}, voting_duration:{},"\
+            " departure_time:{}".format(dic["arrival_time"], dic["start_time"],\
+            dic["voting_duration"], dic["departure_time"])
+
+        return s
 
     def __repr__(self):
         return self.to_string()
@@ -65,27 +78,46 @@ class Precinct(object):
         Output:
             List of voters who voted in the precinct
         '''
+
+        random.seed(seed)
+        time = 0
+        voter_lst = []
+
+        for i in range(self.max_num_voters):
+
+            gaps, duration = gen_voter_parameters(self.arrival_rate,\
+                                self.voting_duration_rate,\
+                                percent_straight_ticket,\
+                                straight_ticket_duration)
+            time += gaps
+
+            if time < self.hours_open * 60:
+                voter = Voter(time, duration)
+                voter_lst.append(voter)
+            else:
+                break
+        
         #method to generate 1 voter, 
         #want to add to a list of voters which we want to get length of to count num voter in precinct
-        time = 0
-        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
-                                            percent_straight_ticket, straight_ticket_duration)
-        time += gaps
-        voter1 = Voter(time, vot_dur)
+        #time = 0
+        #gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
+                                            #percent_straight_ticket, straight_ticket_duration)
+        #time += gaps
+        #voter1 = Voter(time, vot_dur)
 
         #to do this in a loop need something like .
-        num_voters = 0
-        voter_lst = []
-        t = 0
-        gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
-                                            percent_straight_ticket, straight_ticket_duration)
-        for v in voter_lst:
+        #num_voters = 0
+        #voter_lst = []
+        #t = 0
+        #gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
+                                            #percent_straight_ticket, straight_ticket_duration)
+        #for v in voter_lst:
         #    if time < hours_open and num_voters < max_num_voters:
-            time+= gaps
+            #time+= gaps
             #increasing voter number, have to check when we can
-            voter = Voter(time, vot_dur)
+            #voter = Voter(time, vot_dur)
 
-            voter_lst.append(voter)
+            #voter_lst.append(voter)
 
 
 
