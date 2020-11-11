@@ -67,8 +67,8 @@ class Precinct(object):
 
     #def next_voter(self, name, hours_open):
     
-    def gen_voter_lst(self, percent_straight_ticket, straight_ticket_duration, seed):
-        
+    def gen_voter_lst(self, percent_straight_ticket, 
+                        straight_ticket_duration, seed):
         random.seed(seed)
         time = 0
         voter_lst = []
@@ -148,7 +148,8 @@ class VotingBooths(object):
         return self.booths.empty()
 
 
-def find_avg_wait_time(precinct, percent_straight_ticket, ntrials, initial_seed=0):
+def find_avg_wait_time(precinct, percent_straight_ticket, 
+                                        ntrials, initial_seed=0):
     '''
     Simulates a precinct multiple times with a given percentage of
     straight-ticket voters. For each simulation, computes the average
