@@ -20,7 +20,6 @@ class Voter(object):
         self.arrival_time = arrival_time
         self.voting_duration = voting_duration
         self.start_time = None
-        #self.departure_time = self.start_time + self.voting_duration
 
 
     def departure_time(self):
@@ -33,14 +32,10 @@ class Voter(object):
 
 
     def to_string(self):
-        dic = {"arrival_time":self.arrival_time,\
-                "start_time": self.start_time,\
-                "voting_duration": self.voting_duration,\
-                "departure_time": self.departure_time()}
 
         s = "arrival_time:{}, start_time:{}, voting_duration:{},"\
-            " departure_time:{}".format(dic["arrival_time"], dic["start_time"],\
-            dic["voting_duration"], dic["departure_time"])
+            " departure_time:{}".format(self.arrival_time, self.start_time,\
+            self.voting_duration, self.departure_time)
 
         return s
 
@@ -166,9 +161,18 @@ def find_avg_wait_time(precinct, percent_straight_ticket, ntrials, initial_seed=
         the precinct 'ntrials' times.
     '''
 
-    # YOUR CODE HERE.
+    seed = initial_seed
+    precinct = Precinct(p["name"],
+                            p["hours_open"],
+                            p["num_voters"],
+                            p["num_booths"],
+                            p["arrival_rate"],
+                            p["voting_duration_rate"])
 
-    # REPLACE 0.0 with the waiting time this function computes
+    for i in range(ntrials):
+        voters = precinct.simulate(p["percent_straight_ticket"], p["straight_ticket_duration"], seed)
+        seed += 1
+
     return 0.0
 
 
