@@ -37,7 +37,7 @@ class Voter(object):
         return s
 
     def __repr__(self):
-        return self.to_string()
+        return self.to_string(s)
 
 class Precinct(object):
     def __init__(self, name, hours_open, max_num_voters,
@@ -65,6 +65,7 @@ class Precinct(object):
     def next_voter(self, name, hours_open):
         
 
+  
     def simulate(self, percent_straight_ticket, straight_ticket_duration, seed):
         '''
         Simulate a day of voting
@@ -78,14 +79,14 @@ class Precinct(object):
         Output:
             List of voters who voted in the precinct
         '''
-
+    
         random.seed(seed)
         time = 0
         voter_lst = []
 
         for i in range(self.max_num_voters):
 
-            gaps, duration = gen_voter_parameters(self.arrival_rate,\
+            gaps, duration = util.gen_voter_parameters(self.arrival_rate,\
                                 self.voting_duration_rate,\
                                 percent_straight_ticket,\
                                 straight_ticket_duration)
@@ -97,39 +98,24 @@ class Precinct(object):
             else:
                 break
         
-        #method to generate 1 voter, 
-        #want to add to a list of voters which we want to get length of to count num voter in precinct
-        #time = 0
-        #gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
-                                            #percent_straight_ticket, straight_ticket_duration)
-        #time += gaps
-        #voter1 = Voter(time, vot_dur)
 
-        #to do this in a loop need something like .
-        #num_voters = 0
-        #voter_lst = []
-        #t = 0
-        #gaps, vot_dur = gen_voter_parameters(self.arrival_rate, self.voting_duration_rate, 
-                                            #percent_straight_ticket, straight_ticket_duration)
-        #for v in voter_lst:
-        #    if time < hours_open and num_voters < max_num_voters:
-            #time+= gaps
-            #increasing voter number, have to check when we can
-            #voter = Voter(time, vot_dur)
-
-            #voter_lst.append(voter)
+        return voter_lst
 
 
-
-
+class VotingBooths(object):
+    def __init__(self, name, hours_open, max_num_voters,
+                 num_booths, arrival_rate, voting_duration_rate)
         
+        self.name = name 
+        self.hours_open = hours_open
+        self.hours_open = hours_open
+        self.max_num_voters = max_num_voters
+        self.num_booths = num_booths
+        self.arrival_rate = arrival_rate
+        self.voting_duration_rate = voting_duration_rate
 
-
-        # REPLACE [] with appropriate return value
-        return []
-
-
-### YOUR VotingBooths class GOES HERE.
+        booth = VotingBooth(name, hours_open, max_num_voters,
+                 num_booths, arrival_rate, voting_duration_rate)
 
 
 def find_avg_wait_time(precinct, percent_straight_ticket, ntrials, initial_seed=0):
