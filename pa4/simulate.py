@@ -1,7 +1,7 @@
 '''
 Polling places
 
-YOUR NAME(s) HERE
+Defne Yazgan, Jake Underland
 
 Main file for polling place simulation
 '''
@@ -20,15 +20,23 @@ class Voter(object):
         self.arrival_time = arrival_time
         self.voting_duration = voting_duration
         self.start_time = None
-        self.departure_time = None
+        #self.departure_time = self.start_time + self.voting_duration
+
+
+    def departure_time(self):
+        if self.start_time is not None:
+            departure = self.start_time + self.voting_duration
+        else: 
+            return False
+        
+        return departure
 
 
     def to_string(self):
-
         dic = {"arrival_time":self.arrival_time,\
                 "start_time": self.start_time,\
                 "voting_duration": self.voting_duration,\
-                "departure_time": self.departure_time}
+                "departure_time": self.departure_time()}
 
         s = "arrival_time:{}, start_time:{}, voting_duration:{},"\
             " departure_time:{}".format(dic["arrival_time"], dic["start_time"],\
@@ -36,8 +44,10 @@ class Voter(object):
 
         return s
 
+
     def __repr__(self):
-        return self.to_string(s)
+        return self.to_string()
+
 
 class Precinct(object):
     def __init__(self, name, hours_open, max_num_voters,
@@ -53,19 +63,16 @@ class Precinct(object):
             arrival_rate: (float) Rate at which voters arrive
             voting_duration_rate: (float) Lambda for voting duration
         '''
-        self.name = name 
-        self.hours_open = hours_open
+        self.name = name
         self.hours_open = hours_open
         self.max_num_voters = max_num_voters
         self.num_booths = num_booths
         self.arrival_rate = arrival_rate
         self.voting_duration_rate = voting_duration_rate
-           
 
-    def next_voter(self, name, hours_open):
+    #def next_voter(self, name, hours_open):
         
 
-  
     def simulate(self, percent_straight_ticket, straight_ticket_duration, seed):
         '''
         Simulate a day of voting
@@ -79,7 +86,6 @@ class Precinct(object):
         Output:
             List of voters who voted in the precinct
         '''
-    
         random.seed(seed)
         time = 0
         voter_lst = []
@@ -98,24 +104,48 @@ class Precinct(object):
             else:
                 break
         
+        total_wait = 0
+        booths = VotingBooths(self.num_booths)
 
+        for voter in voter_lst:
+            if not booths.full():
+                voter.start_time = voter.arrival_time
+                booths.enter_voter(voter.departure_time())
+
+            else:
+                prev_voter_depart_time = booths.exit_voter()
+
+                if voter.arrival_time < prev_voter_depart_time:
+                    total_wait += (prev_voter_depart_time - voter.arrival_time)
+                    voter.start_time = prev_voter_depart_time
+                    booths.enter_voter(voter.departure_time())
+                
+                else:
+                    voter.start_time = voter.arrival_time
+                    booths.enter_voter(voter.departure_time())
+            
+        
         return voter_lst
 
 
 class VotingBooths(object):
-    def __init__(self, name, hours_open, max_num_voters,
-                 num_booths, arrival_rate, voting_duration_rate)
-        
-        self.name = name 
-        self.hours_open = hours_open
-        self.hours_open = hours_open
-        self.max_num_voters = max_num_voters
-        self.num_booths = num_booths
-        self.arrival_rate = arrival_rate
-        self.voting_duration_rate = voting_duration_rate
 
-        booth = VotingBooth(name, hours_open, max_num_voters,
-                 num_booths, arrival_rate, voting_duration_rate)
+    def __init__(self, num_booths):
+        self.booths = queue.PriorityQueue(num_booths)
+        self.num_booths = num_booths
+    
+    def enter_voter(self, departure_time):
+        self.booths.put(departure_time, block=False)
+    
+    def exit_voter(self):
+        voter = self.booths.get(block=False)
+        return voter
+    
+    def full(self):
+        return self.booths.full()
+    
+    def empty(self):
+        return self.booths.empty()
 
 
 def find_avg_wait_time(precinct, percent_straight_ticket, ntrials, initial_seed=0):
