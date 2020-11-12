@@ -16,7 +16,7 @@ import util
 
 class Voter(object):
 
-    def __init__(self,arrival_time, voting_duration):
+    def __init__(self, arrival_time, voting_duration):
         self.arrival_time = arrival_time
         self.voting_duration = voting_duration
         self.start_time = None
@@ -66,28 +66,7 @@ class Precinct(object):
         self.voting_duration_rate = voting_duration_rate
 
     #def next_voter(self, name, hours_open):
-    
-    def gen_voter_lst(self, percent_straight_ticket, 
-                        straight_ticket_duration, seed):
-        random.seed(seed)
-        time = 0
-        voter_lst = []
 
-        for i in range(self.max_num_voters):
-
-            gaps, duration = util.gen_voter_parameters(self.arrival_rate,\
-                                self.voting_duration_rate,\
-                                percent_straight_ticket,\
-                                straight_ticket_duration)
-            time += gaps
-
-            if time < self.hours_open * 60:
-                voter = Voter(time, duration)
-                voter_lst.append(voter)
-            else:
-                break
-
-        return voter_lst
 
     def simulate(self, percent_straight_ticket, straight_ticket_duration, seed):
         '''
@@ -103,28 +82,42 @@ class Precinct(object):
             List of voters who voted in the precinct
         '''
 
-        voter_lst = self.gen_voter_lst(percent_straight_ticket,\
-                                    straight_ticket_duration, seed)
-        
         booths = VotingBooths(self.num_booths)
+        random.seed(seed)
+        time = 0
+        voter_lst = []
 
-        for voter in voter_lst:
-            if not booths.full():
-                voter.start_time = voter.arrival_time
-                booths.enter_voter(voter.departure_time())
+        for i in range(self.max_num_voters):
 
-            else:
-                prev_voter_depart_time = booths.exit_voter()
+            gaps, duration = util.gen_voter_parameters(self.arrival_rate,\
+                                self.voting_duration_rate,\
+                                percent_straight_ticket,\
+                                straight_ticket_duration)
+            time += gaps
 
-                if voter.arrival_time < prev_voter_depart_time:
-                    voter.start_time = prev_voter_depart_time
-                    booths.enter_voter(voter.departure_time())
-                
-                else:
+            if time < self.hours_open * 60:
+                voter = Voter(time, duration)
+
+                if not booths.full():
                     voter.start_time = voter.arrival_time
                     booths.enter_voter(voter.departure_time())
-            
-        
+
+                else:
+                    prev_voter_depart_time = booths.exit_voter()
+
+                    if voter.arrival_time < prev_voter_depart_time:
+                        voter.start_time = prev_voter_depart_time
+                        booths.enter_voter(voter.departure_time())
+                    
+                    else:
+                        voter.start_time = voter.arrival_time
+                        booths.enter_voter(voter.departure_time())
+                
+                voter_lst.append(voter)
+
+            else:
+                break
+
         return voter_lst
 
 
@@ -149,7 +142,7 @@ class VotingBooths(object):
 
 
 def find_avg_wait_time(precinct, percent_straight_ticket, 
-                                        ntrials, initial_seed=0):
+                       ntrials, initial_seed=0):
     '''
     Simulates a precinct multiple times with a given percentage of
     straight-ticket voters. For each simulation, computes the average
@@ -170,11 +163,11 @@ def find_avg_wait_time(precinct, percent_straight_ticket,
     seed = initial_seed
     straight_ticket_duration = precinct["straight_ticket_duration"]
     p = Precinct(precinct["name"],
-                precinct["hours_open"],
-                precinct["num_voters"],
-                precinct["num_booths"],
-                precinct["arrival_rate"],
-                precinct["voting_duration_rate"])
+                 precinct["hours_open"],
+                 precinct["num_voters"],
+                 precinct["num_booths"],
+                 precinct["arrival_rate"],
+                 precinct["voting_duration_rate"])
 
     lst_avg_wt = []
 
@@ -211,14 +204,21 @@ def find_percent_split_ticket(precinct, target_wait_time, ntrials, seed=0):
         - waiting_time: (float) The actual average waiting time with that
                         percentage of split-ticket voters
 
-        If the target waiting time is infeasible, returns (0, None)
+        If the target waiting time is infeasible, returns (1, None)
     '''
 
-    # YOUR CODE HERE
+    over_target_percentage = 0
+    over_target_wt = 0
 
-    # REPLACE (0,0) with a tuple containing the percentage of split-ticket
-    # voters and the average waiting time for that percentage
-    return (0, 0)
+    for i in range(0, 101, 10):
+        wt = find_avg_wait_time(precinct, (100 - i) / 100,
+                                ntrials, seed)
+        if wt > target_wait_time:
+            over_target_percentage = i / 100
+            over_target_wt = wt
+            return (over_target_percentage, over_target_wt)
+
+    return (1, None)
 
 
 # DO NOT REMOVE THESE LINES OF CODE
@@ -275,7 +275,7 @@ def cmd(precincts_file, target_wait_time, print_voters):
 
         percent, avg_wt = find_percent_split_ticket(precinct, target_wait_time, 20, seed)
 
-        if percent == 0:
+        if percent == 1:
             msg = "Waiting times are always below {:.2f}"
             msg += " in precinct '{}'"
             print(msg.format(target_wait_time, precinct["name"]))
