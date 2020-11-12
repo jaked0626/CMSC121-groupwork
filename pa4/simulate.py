@@ -43,10 +43,6 @@ class Voter(object):
         return s
 
 
-    def __repr__(self):
-        return self.to_string()
-
-
 class Precinct(object):
     def __init__(self, name, hours_open, 
                 max_num_voters, num_booths, 
@@ -84,6 +80,7 @@ class Precinct(object):
         Output:
             List of voters generated from given parameter function
         '''
+
         random.seed(seed)
         time = 0
         voter_lst = []
@@ -103,6 +100,7 @@ class Precinct(object):
                 break
 
         return voter_lst
+
 
     def simulate(self, percent_straight_ticket, 
                 straight_ticket_duration, seed):
@@ -145,10 +143,17 @@ class Precinct(object):
 
 
 class VotingBooths(object):
-
     def __init__(self, num_booths):
         self.booths = queue.PriorityQueue(num_booths)
         self.num_booths = num_booths
+    '''
+        Constructor for the Voting Booth
+
+        Input:
+            name: (str) Name of the precinct
+            num_booths: (int) Number of voting booths in the precinct
+            
+        '''
     
     def enter_voter(self, departure_time):
         self.booths.put(departure_time, block=False)
