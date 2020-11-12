@@ -1,7 +1,7 @@
 '''
 Polling places
 
-Defne Yazgan, Jake Underland
+Defne Buyukyazgan, Jake Underland
 
 Main file for polling place simulation
 '''
@@ -15,13 +15,17 @@ import util
 
 
 class Voter(object):
-
     def __init__(self, arrival_time, voting_duration):
         self.arrival_time = arrival_time
         self.voting_duration = voting_duration
         self.start_time = None
-
-
+        '''
+        Constructor of the Voter class
+        Input:
+            arrivel_time: (float) Arrival time of voter to booth
+            voting duration: (float) Time it takes voter to vote
+        '''
+        
     def departure_time(self):
         if self.start_time is not None:
             departure = self.start_time + self.voting_duration
@@ -32,7 +36,6 @@ class Voter(object):
 
 
     def to_string(self):
-
         s = "arrival_time:{}, start_time:{}, voting_duration:{},"\
             " departure_time:{}".format(self.arrival_time, self.start_time,\
             self.voting_duration, self.departure_time)
@@ -45,8 +48,9 @@ class Voter(object):
 
 
 class Precinct(object):
-    def __init__(self, name, hours_open, max_num_voters,
-                 num_booths, arrival_rate, voting_duration_rate):
+    def __init__(self, name, hours_open, 
+                max_num_voters, num_booths, 
+                arrival_rate, voting_duration_rate):
         '''
         Constructor for the Precinct class
 
@@ -65,10 +69,21 @@ class Precinct(object):
         self.arrival_rate = arrival_rate
         self.voting_duration_rate = voting_duration_rate
 
-    #def next_voter(self, name, hours_open):
     
     def gen_voter_lst(self, percent_straight_ticket,
                       straight_ticket_duration, seed):
+        '''
+        Generate a list of voters
+        Input:
+            percent_straight_ticket: (float) Percentage of straight-ticket
+              voters as a decimal between 0 and 1 (inclusive)
+            straight_ticket_duration: (float) Voting duration for
+              straight-ticket voters
+            seed: (int) Random seed to use in the simulation
+
+        Output:
+            List of voters generated from given parameter function
+        '''
         random.seed(seed)
         time = 0
         voter_lst = []
@@ -89,7 +104,8 @@ class Precinct(object):
 
         return voter_lst
 
-    def simulate(self, percent_straight_ticket, straight_ticket_duration, seed):
+    def simulate(self, percent_straight_ticket, 
+                straight_ticket_duration, seed):
         '''
         Simulate a day of voting
         Input:
@@ -248,7 +264,8 @@ def cmd(precincts_file, target_wait_time, print_voters):
                                 p["num_booths"],
                                 p["arrival_rate"],
                                 p["voting_duration_rate"])
-            voters[p["name"]] = precinct.simulate(p["percent_straight_ticket"], p["straight_ticket_duration"], seed)
+            voters[p["name"]] = precinct.simulate(p["percent_straight_ticket"], 
+                                p["straight_ticket_duration"], seed)
         print()
         if print_voters:
             for p in voters:
