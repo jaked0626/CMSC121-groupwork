@@ -181,8 +181,8 @@ def find_avg_wait_time(precinct, percent_straight_ticket,
     for i in range(ntrials):
         voters = p.simulate(percent_straight_ticket, 
                             straight_ticket_duration, seed)
-        avg_wt = sum([v.start_time - v.arrival_time for v in voters])\
-                                                        / len(voters)
+        sum_wt = sum([v.start_time - v.arrival_time for v in voters])
+        avg_wt = sum_wt / len(voters)
         lst_avg_wt.append(avg_wt)
         seed += 1
 
