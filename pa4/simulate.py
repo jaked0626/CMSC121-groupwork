@@ -21,21 +21,40 @@ class Voter(object):
         self.start_time = None
         '''
         Constructor of the Voter class
+
         Input:
             arrivel_time: (float) Arrival time of voter to booth
             voting duration: (float) Time it takes voter to vote
         '''
         
     def departure_time(self):
+        '''
+        Calculates departure time of voter
+
+        Inputs:
+            start_time: (None, then float) voting start time
+            voting_duration: (float) Time it takes voter to vote
+
+        Returns departure time (float)
+        '''
         if self.start_time is not None:
             departure = self.start_time + self.voting_duration
-        else: 
-            return False
         
         return departure
 
 
     def to_string(self):
+        '''
+        Displays information about voter as a string
+
+        Inputs:
+            start_time: (None, then float) voting start time
+            voting_duration: (float) Time it takes voter to vote
+        ?   arrival_time:
+        ?   departure_time:
+            
+        Returns list of voter information
+        '''
         s = "arrival_time:{}, start_time:{}, voting_duration:{},"\
             " departure_time:{}".format(self.arrival_time, self.start_time,\
             self.voting_duration, self.departure_time)
@@ -70,6 +89,7 @@ class Precinct(object):
                       straight_ticket_duration, seed):
         '''
         Generate a list of voters
+
         Input:
             percent_straight_ticket: (float) Percentage of straight-ticket
               voters as a decimal between 0 and 1 (inclusive)
@@ -156,16 +176,48 @@ class VotingBooths(object):
         '''
     
     def enter_voter(self, departure_time):
+        '''
+        Constructor for the Voting Booth
+
+        Input:
+            name: (str) Name of the precinct
+            num_booths: (int) Number of voting booths in the precinct
+            
+        '''
         self.booths.put(departure_time, block=False)
     
     def exit_voter(self):
+        '''
+        Constructor for the Voting Booth
+
+        Input:
+            name: (str) Name of the precinct
+            num_booths: (int) Number of voting booths in the precinct
+            
+        '''
         voter = self.booths.get(block=False)
         return voter
     
     def full(self):
+        '''
+        Constructor for the Voting Booth
+
+        Input:
+            name: (str) Name of the precinct
+            num_booths: (int) Number of voting booths in the precinct
+            
+        '''
         return self.booths.full()
     
     def empty(self):
+        '''
+        Constructor for the Voting Booth
+
+        Input:
+            name: (str) Name of the precinct
+            num_booths: (int) Number of voting booths in the precinct
+            
+        '''
         return self.booths.empty()
 
 
@@ -190,6 +242,7 @@ def find_avg_wait_time(precinct, percent_straight_ticket,
 
     seed = initial_seed
     straight_ticket_duration = precinct["straight_ticket_duration"]
+    
     p = Precinct(precinct["name"],
                  precinct["hours_open"],
                  precinct["num_voters"],
