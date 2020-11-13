@@ -144,16 +144,15 @@ class Precinct(object):
 
 class VotingBooths(object):
     def __init__(self, num_booths):
-        self.booths = queue.PriorityQueue(num_booths)
-        self.num_booths = num_booths
-    '''
+        '''
         Constructor for the Voting Booth
 
         Input:
             name: (str) Name of the precinct
-            num_booths: (int) Number of voting booths in the precinct
-            
+            num_booths: (int) Number of voting booths in the precinct   
         '''
+        self.booths = queue.PriorityQueue(num_booths)
+        self.num_booths = num_booths
     
     def enter_voter(self, departure_time):
         self.booths.put(departure_time, block=False)
