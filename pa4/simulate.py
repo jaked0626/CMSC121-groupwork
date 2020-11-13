@@ -45,8 +45,8 @@ class Voter(object):
 
 class Precinct(object):
     def __init__(self, name, hours_open, 
-                max_num_voters, num_booths, 
-                arrival_rate, voting_duration_rate):
+                 max_num_voters, num_booths, 
+                 arrival_rate, voting_duration_rate):
         '''
         Constructor for the Precinct class
 
@@ -94,6 +94,7 @@ class Precinct(object):
             time += gaps
 
             if time < self.hours_open * 60:
+                # For all arrivals during open hours, generate a voter
                 voter = Voter(time, duration)
                 voter_lst.append(voter)
             else:
@@ -103,7 +104,7 @@ class Precinct(object):
 
 
     def simulate(self, percent_straight_ticket, 
-                straight_ticket_duration, seed):
+                 straight_ticket_duration, seed):
         '''
         Simulate a day of voting
         Input:
@@ -117,17 +118,20 @@ class Precinct(object):
             List of voters who voted in the precinct
         '''
 
-        voter_lst = self.gen_voter_lst(percent_straight_ticket,\
-                                    straight_ticket_duration, seed)
+        voter_lst = self.gen_voter_lst(percent_straight_ticket,
+                                       straight_ticket_duration, seed)
         
         booths = VotingBooths(self.num_booths)
 
         for voter in voter_lst:
             if not booths.full():
+                # if there is an empty booth, voters start upon arrival
                 voter.start_time = voter.arrival_time
                 booths.enter_voter(voter.departure_time())
 
             else:
+                # if booths are full, exit a voter first and compare next
+                # voter's arrival time with exited voter's departure time
                 prev_voter_depart_time = booths.exit_voter()
 
                 if voter.arrival_time < prev_voter_depart_time:
@@ -137,7 +141,6 @@ class Precinct(object):
                 else:
                     voter.start_time = voter.arrival_time
                     booths.enter_voter(voter.departure_time())
-            
         
         return voter_lst
 
@@ -163,9 +166,6 @@ class VotingBooths(object):
     
     def full(self):
         return self.booths.full()
-    
-    def empty(self):
-        return self.booths.empty()
 
 
 def find_avg_wait_time(precinct, percent_straight_ticket, 
@@ -198,15 +198,16 @@ def find_avg_wait_time(precinct, percent_straight_ticket,
 
     lst_avg_wt = []
 
+    # simulate n times, compute average wt, and add average to list.
     for i in range(ntrials):
-        voters = p.simulate(percent_straight_ticket, 
+        voters = p.simulate(percent_straight_ticket,
                             straight_ticket_duration, seed)
         sum_wt = sum([v.start_time - v.arrival_time for v in voters])
         avg_wt = sum_wt / len(voters)
         lst_avg_wt.append(avg_wt)
-        seed += 1
+        seed += 1  # increment seed for next simulation
 
-    sorted_lst = sorted(lst_avg_wt)
+    sorted_lst = sorted(lst_avg_wt)  # sort averages in ascending order
 
     return sorted_lst[ntrials//2]
 
@@ -235,15 +236,19 @@ def find_percent_split_ticket(precinct, target_wait_time, ntrials, seed=0):
     '''
 
     over_target_percentage = 0
-    over_target_wt = 0
+    over_target_avg_wt = 0
 
+    # i = percent split ticket by increments of 10, not decimal
     for i in range(0, 101, 10):
-        wt = find_avg_wait_time(precinct, (100 - i) / 100,
-                                ntrials, seed)
-        if wt > target_wait_time:
-            over_target_percentage = i / 100
-            over_target_wt = wt
-            return (over_target_percentage, over_target_wt)
+        percent_straight_ticket = (100 - i) / 100  # decimal form
+        avg_wt = find_avg_wait_time(precinct, percent_straight_ticket,
+                                    ntrials, seed)
+
+        if avg_wt > target_wait_time:
+            over_target_percentage = i / 100  # decimal form
+            over_target_avg_wt = avg_wt
+            return (over_target_percentage, over_target_avg_wt)
+            # if above is never met, target wait time always feasible
 
     return (1, None)
 
